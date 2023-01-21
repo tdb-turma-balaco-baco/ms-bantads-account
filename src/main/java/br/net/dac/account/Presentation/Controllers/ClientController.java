@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/client")
 public class ClientController {
 
-    @GetMapping("/transactionsHistory")
-    public ResponseEntity<?> transactionsHistory(){
+    @GetMapping("{cpf}/transactionsHistory")
+    public ResponseEntity<?> transactionsHistory(@PathVariable("cpf") String cpf){
+        //CPF + StartDate + EndDate
         return ResponseEntity.ok("");
+
     }
 
     @GetMapping("/{cpf}/accountDetails")

@@ -23,6 +23,9 @@ public class TransactionController {
 
     @PostMapping("/transfer")
     public ResponseEntity<?> transfer(){
+        //DTO to Command
+        //Send to Service
+        //Return
         return ResponseEntity.ok("");
     }
 }
