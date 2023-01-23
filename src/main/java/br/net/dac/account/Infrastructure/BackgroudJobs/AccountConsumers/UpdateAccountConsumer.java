@@ -1,6 +1,5 @@
 package br.net.dac.account.Infrastructure.BackgroudJobs.AccountConsumers;
 
-import org.hibernate.annotations.Comment;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;

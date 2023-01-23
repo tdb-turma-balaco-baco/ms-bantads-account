@@ -1,4 +1,4 @@
-package br.net.dac.account.Application.ServicesAbstractions;
+package br.net.dac.account.Application.Abstractions;
 
 public interface IMessageSender {
     

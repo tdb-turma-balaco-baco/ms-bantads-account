@@ -1,10 +1,10 @@
-package br.net.dac.account.Application.Services.Transactions.Commands.Common;
+package br.net.dac.account.Application.Services.Transaction.Commands.Handler;
 
-import br.net.dac.account.Application.Services.Transactions.Commands.Deposit.DepositCommand;
-import br.net.dac.account.Application.Services.Transactions.Commands.Transfer.TransferCommand;
-import br.net.dac.account.Application.Services.Transactions.Commands.Withdraw.WithdrawCommand;
+import br.net.dac.account.Application.Services.Transaction.Commands.Deposit.DepositCommand;
+import br.net.dac.account.Application.Services.Transaction.Commands.Transfer.TransferCommand;
+import br.net.dac.account.Application.Services.Transaction.Commands.Withdraw.WithdrawCommand;
 
-public interface ITransactionHandler{
+public interface ITransactionCommandHandler{
 
     void makeDeposit(DepositCommand deposit);
     void makeWithdraw(WithdrawCommand withdraw);
