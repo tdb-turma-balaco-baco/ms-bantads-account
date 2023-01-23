@@ -4,6 +4,10 @@ public class ClientDetailsQuery {
     
     private String cpf;
 
+    public ClientDetailsQuery(String cpf) {
+        this.cpf = cpf;
+    }
+
     public String getCpf() {
         return cpf;
     }

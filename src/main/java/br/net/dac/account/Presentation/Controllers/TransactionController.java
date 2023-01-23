@@ -1,7 +1,6 @@
 package br.net.dac.account.Presentation.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,7 +61,7 @@ public class TransactionController {
                 transferRequest.getDestinationAccountId());
 
         _transactionCommandHandler.makeTransfer(transferCommand);
-        
+
         return ResponseEntity.status(200).build();
     }
 }
