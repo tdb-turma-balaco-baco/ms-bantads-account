@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.net.dac.account.Application.Services.Client.Common.ClientDetails;
-import br.net.dac.account.Application.Services.Client.Common.TransactionHistoryResult;
+import br.net.dac.account.Application.Services.Client.Queries.ClientDetails.ClientDetails;
 import br.net.dac.account.Application.Services.Client.Queries.ClientDetails.ClientDetailsQuery;
 import br.net.dac.account.Application.Services.Client.Queries.Handler.IClientQueriesHandler;
+import br.net.dac.account.Application.Services.Client.Queries.TransactionsHistory.TransactionHistoryResult;
 import br.net.dac.account.Application.Services.Client.Queries.TransactionsHistory.TransactionsHistoryQuery;
 import br.net.dac.account.Presentation.Contracts.Client.TransactionHistoryRequest;
 

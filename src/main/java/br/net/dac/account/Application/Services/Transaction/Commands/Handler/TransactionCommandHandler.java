@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import br.net.dac.account.Application.Services.Transaction.Commands.Common.BaseTransactionCommand;
 import br.net.dac.account.Application.Services.Transaction.Commands.Deposit.DepositCommand;
@@ -17,6 +18,7 @@ import br.net.dac.account.Domain.Exceptions.InsufficientFundsException;
 import br.net.dac.account.Infrastructure.Persistence.Repositories.AccountRepository;
 import br.net.dac.account.Infrastructure.Persistence.Repositories.TransactionRepository;
 
+@Service
 public class TransactionCommandHandler implements ITransactionCommandHandler {
 
     @Autowired

@@ -1,6 +1,5 @@
 package br.net.dac.account.Presentation.Contracts.Client;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 public class TransactionHistoryRequest {
