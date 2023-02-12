@@ -1,4 +1,4 @@
-package br.net.dac.account.Domain.Entities;
+package br.net.dac.account.Domain.Entities.Read;
 
 import java.util.Date;
 import java.util.UUID;
@@ -13,16 +13,20 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "transaction")
-public class Transaction {
+public class TransactionDetails {
     
     @Id
+    @Column(name = "id")
     private UUID id;
 
+    @Column(name = "value")
     private Double value;
 
+    @Column(name = "operationDate")
     private Date operationDate;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "operationType")
     private Operation operationType;
 
     @Column(name = "sourceAccount")
@@ -31,9 +35,13 @@ public class Transaction {
     @Column(name = "destinationAccount", nullable = true)
     private Long destinationAccount;
 
+    @Column(name = "previousBalance")
     private Double previousBalance;
 
-    public Transaction(UUID id, Double value, Date operationDate, Operation operationType, Long sourceAccount,
+    public TransactionDetails() {
+    }
+
+    public TransactionDetails(UUID id, Double value, Date operationDate, Operation operationType, Long sourceAccount,
             Long destinationAccount, Double previousBalance) {
         this.id = id;
         this.value = value;
@@ -68,14 +76,6 @@ public class Transaction {
         this.operationDate = operationDate;
     }
 
-    public Double getPreviousBalance() {
-        return previousBalance;
-    }
-
-    public void setPreviousBalance(Double previousBalance) {
-        this.previousBalance = previousBalance;
-    }
-
     public Operation getOperationType() {
         return operationType;
     }
@@ -99,4 +99,14 @@ public class Transaction {
     public void setDestinationAccount(Long destinationAccount) {
         this.destinationAccount = destinationAccount;
     }
+
+    public Double getPreviousBalance() {
+        return previousBalance;
+    }
+
+    public void setPreviousBalance(Double previousBalance) {
+        this.previousBalance = previousBalance;
+    }
+
+    
 }

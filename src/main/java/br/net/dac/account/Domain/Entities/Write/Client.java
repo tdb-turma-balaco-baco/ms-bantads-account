@@ -1,5 +1,6 @@
-package br.net.dac.account.Domain.Entities;
+package br.net.dac.account.Domain.Entities.Write;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,12 +13,16 @@ public class Client {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "cpf")
     private String cpf;
 
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
     
     public Client(Long id, String name, String cpf, String email) {
@@ -25,6 +30,15 @@ public class Client {
         this.name = name;
         this.cpf = cpf;
         this.email = email;
+    }
+
+    public Client(String name, String cpf, String email) {
+        this.name = name;
+        this.cpf = cpf;
+        this.email = email;
+    }
+
+    public Client() {
     }
 
     public Long getId() {

@@ -12,31 +12,31 @@ import br.net.dac.account.Application.Services.Transaction.Commands.Common.BaseT
 import br.net.dac.account.Application.Services.Transaction.Commands.Deposit.DepositCommand;
 import br.net.dac.account.Application.Services.Transaction.Commands.Transfer.TransferCommand;
 import br.net.dac.account.Application.Services.Transaction.Commands.Withdraw.WithdrawCommand;
-import br.net.dac.account.Domain.Entities.Transaction;
+import br.net.dac.account.Domain.Entities.Write.Transaction;
 import br.net.dac.account.Domain.Exceptions.AccountNotFoundException;
 import br.net.dac.account.Domain.Exceptions.InsufficientFundsException;
-import br.net.dac.account.Infrastructure.Persistence.Repositories.AccountRepository;
-import br.net.dac.account.Infrastructure.Persistence.Repositories.TransactionRepository;
+import br.net.dac.account.Infrastructure.Persistence.RepositoriesWrite.AccountRepository;
+import br.net.dac.account.Infrastructure.Persistence.RepositoriesWrite.TransactionRepository;
 
 @Service
 public class TransactionCommandHandler implements ITransactionCommandHandler {
 
-    @Autowired
-    TransactionRepository _transactionRepository;
+    //@Autowired
+    //TransactionRepository _transactionRepository;
 
-    @Autowired
-    AccountRepository _accountRepository;
+    //@Autowired
+    //AccountRepository _accountRepository;
 
     @Override
     public void makeDeposit(DepositCommand deposit) throws AccountNotFoundException {
 
         ValidateAccountExist(deposit.getAccountId());
 
-        Double balance = _accountRepository.getBalanceByAccountId(deposit.getAccountId());
+        //Double balance = _accountRepository.getBalanceByAccountId(deposit.getAccountId());
 
-        Transaction transaction = createTransaction(deposit, balance);
+        //Transaction transaction = createTransaction(deposit, balance);
 
-        _transactionRepository.save(transaction);
+        //_transactionRepository.save(transaction);
 
         //Update balance
         //Send event - balance and createTransaction
@@ -47,13 +47,13 @@ public class TransactionCommandHandler implements ITransactionCommandHandler {
         
         ValidateAccountExist(withdraw.getAccountId());
 
-        Double balance = _accountRepository.getBalanceByAccountId(withdraw.getAccountId());
+        //Double balance = _accountRepository.getBalanceByAccountId(withdraw.getAccountId());
 
-        ValidateSufficientFunds(withdraw.getAmount(), balance);
+        //ValidateSufficientFunds(withdraw.getAmount(), balance);
 
-        Transaction transaction = createTransaction(withdraw, balance);
+        //Transaction transaction = createTransaction(withdraw, balance);
 
-        _transactionRepository.save(transaction);
+        //_transactionRepository.save(transaction);
         
     }
 
@@ -63,14 +63,14 @@ public class TransactionCommandHandler implements ITransactionCommandHandler {
         ValidateAccountExist(transfer.getAccountId());
         ValidateAccountExist(transfer.getDestinationAccountId());
         
-        Double balance = _accountRepository.getBalanceByAccountId(transfer.getAccountId());
+        //Double balance = _accountRepository.getBalanceByAccountId(transfer.getAccountId());
         
-        ValidateSufficientFunds(transfer.getAmount(), balance);
+        //ValidateSufficientFunds(transfer.getAmount(), balance);
 
-        Transaction transaction = createTransaction(transfer, balance);
-        transaction.setDestinationAccount(transaction.getDestinationAccount());
+        //Transaction transaction = createTransaction(transfer, balance);
+        //transaction.setDestinationAccount(transaction.getDestinationAccount());
 
-        _transactionRepository.save(transaction);
+        //_transactionRepository.save(transaction);
         
     }
 
@@ -87,9 +87,9 @@ public class TransactionCommandHandler implements ITransactionCommandHandler {
     }
 
     private void ValidateAccountExist(Long accountId){
-        if(_accountRepository.existsById(accountId) == false){      
+        //if(_accountRepository.existsById(accountId) == false){      
             throw new AccountNotFoundException();
-        };
+        //};
     }
 
     private void ValidateSufficientFunds(Double operationValue, Double balanceAccount){

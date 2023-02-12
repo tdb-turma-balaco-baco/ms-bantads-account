@@ -9,7 +9,7 @@ import br.net.dac.account.Application.Services.Client.Events.CreateAccountEvent;
 @Component
 public class CreateAccountConsumer {
     
-    @RabbitListener(queues = {"COMMAND_ACCOUNT_QUEUE"})
+    //@RabbitListener(queues = {"COMMAND_ACCOUNT_QUEUE"})
     public void receive(@Payload CreateAccountEvent createAccount){
         //System.out.println("Message updateAccount: " + id);
     }

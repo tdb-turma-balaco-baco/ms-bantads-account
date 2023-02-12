@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UpdateStatusAccountConsumer {
     
-    @RabbitListener(queues = {"COMMAND_ACCOUNT_QUEUE"})
+    //@RabbitListener(queues = {"COMMAND_ACCOUNT_QUEUE"})
     public void receive(@Payload String message){
         System.out.println("Message: " + message);
     }
