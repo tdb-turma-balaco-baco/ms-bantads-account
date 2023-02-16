@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import br.net.dac.account.Application.Services.Manager.Queries.ClientsBalance.ClientsBalanceQuery;
 import br.net.dac.account.Application.Services.Manager.Queries.ClientsBalance.ClientsBalanceResult;
 import br.net.dac.account.Application.Services.Manager.Queries.ManagerClients.ManagerClientsQuery;
-import br.net.dac.account.Application.Services.Manager.Queries.ManagerClients.ManagerClientsResult;
+import br.net.dac.account.Application.Services.Manager.Queries.ManagerClients.ManagerClient;
 import br.net.dac.account.Application.Services.Manager.Queries.PendingAccounts.PendingAccount;
 import br.net.dac.account.Application.Services.Manager.Queries.PendingAccounts.PendingAccountsQuery;
 import br.net.dac.account.Application.Services.Manager.Queries.TopFiveClients.TopFiveClientsQuery;
@@ -20,19 +20,38 @@ import br.net.dac.account.Infrastructure.Persistence.RepositoriesRead.AccountRea
 @Service
 public class ManagerQueriesHandler implements IManagerQueriesHandler {
 
-    //@Autowired
-    //AccountReadRepository _accountRepository;
+    @Autowired
+    AccountReadRepository _accountRepository;
 
     @Override
     public ClientsBalanceResult getClientsBalance(ClientsBalanceQuery query) {
-        // TODO Auto-generated method stub
-        return null;
+        List<AccountDetails> managerClients = _accountRepository.findClientsManager(query.getCpf());
+
+        var managerClientsBalance = managerClients.stream().mapToDouble(m -> m.getBalance());
+
+        Double totalPositiveBalance = managerClientsBalance.filter(balance -> balance > 0.0).sum();
+        Double totalNegativeBalance = managerClientsBalance.filter(balance -> balance < 0.0).sum();
+
+        ClientsBalanceResult clientsBalance =  new ClientsBalanceResult(totalPositiveBalance, totalNegativeBalance);
+
+        return clientsBalance;
     }
 
     @Override
-    public ManagerClientsResult getManagerClients(ManagerClientsQuery query) {
-        // TODO Auto-generated method stub
-        return null;
+    public List<ManagerClient> getManagerClients(ManagerClientsQuery query) {
+        List<AccountDetails> managerClients = _accountRepository.findClientsManager(query.getCpf());
+
+        List<ManagerClient> managerClientsResult = new ArrayList<>();
+        for (AccountDetails account : managerClients) {
+            var client = new ManagerClient(account.getClientCpf(),
+                                 account.getClientName(),
+                                 account.getBalance());
+        
+            managerClientsResult.add(client);
+        }
+
+        return managerClientsResult;
+
     }
 
     @Override
@@ -42,7 +61,7 @@ public class ManagerQueriesHandler implements IManagerQueriesHandler {
         List<PendingAccount> pendingAccountsResult = new ArrayList<>();
         for (AccountDetails account : pendingAccounts) {
             var pendingAccount = new PendingAccount(account.getAccountNumber(),
-                                 account.getClientcpf(),
+                                 account.getClientCpf(),
                                  account.getClientName(),
                                  account.getWage());
         
@@ -58,7 +77,7 @@ public class ManagerQueriesHandler implements IManagerQueriesHandler {
 
         List<TopClient> topFiveClients = new ArrayList<>();
         for (AccountDetails client : topAccountClients) {
-            var topClient = new TopClient(client.getClientcpf(),
+            var topClient = new TopClient(client.getClientCpf(),
              client.getClientName(), 
              client.getBalance());
         

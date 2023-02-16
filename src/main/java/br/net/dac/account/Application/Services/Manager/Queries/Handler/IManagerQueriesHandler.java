@@ -5,7 +5,7 @@ import java.util.List;
 import br.net.dac.account.Application.Services.Manager.Queries.ClientsBalance.ClientsBalanceQuery;
 import br.net.dac.account.Application.Services.Manager.Queries.ClientsBalance.ClientsBalanceResult;
 import br.net.dac.account.Application.Services.Manager.Queries.ManagerClients.ManagerClientsQuery;
-import br.net.dac.account.Application.Services.Manager.Queries.ManagerClients.ManagerClientsResult;
+import br.net.dac.account.Application.Services.Manager.Queries.ManagerClients.ManagerClient;
 import br.net.dac.account.Application.Services.Manager.Queries.PendingAccounts.PendingAccountsQuery;
 import br.net.dac.account.Application.Services.Manager.Queries.PendingAccounts.PendingAccount;
 import br.net.dac.account.Application.Services.Manager.Queries.TopFiveClients.TopFiveClientsQuery;
@@ -14,7 +14,7 @@ import br.net.dac.account.Application.Services.Manager.Queries.TopFiveClients.To
 public interface IManagerQueriesHandler {
     ClientsBalanceResult getClientsBalance(ClientsBalanceQuery query);
 
-    ManagerClientsResult getManagerClients(ManagerClientsQuery query);
+    List<ManagerClient> getManagerClients(ManagerClientsQuery query);
 
     List<PendingAccount> getPendingAccounts(PendingAccountsQuery query);
 

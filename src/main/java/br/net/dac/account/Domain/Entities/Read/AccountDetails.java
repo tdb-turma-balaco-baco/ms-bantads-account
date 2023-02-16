@@ -4,10 +4,14 @@ import java.util.Date;
 
 import br.net.dac.account.Domain.Enums.Status;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "account")
 public class AccountDetails {
     
     @Id
@@ -18,7 +22,7 @@ public class AccountDetails {
     private String clientName;
 
     @Column(name = "clientCpf")
-    private String clientcpf;
+    private String clientCpf;
 
     @Column(name = "clientEmail")
     private String clientEmail;
@@ -56,7 +60,7 @@ public class AccountDetails {
             Double wage, Status status, String statusReason) {
         this.accountNumber = accountNumber;
         this.clientName = clientName;
-        this.clientcpf = clientcpf;
+        this.clientCpf = clientcpf;
         this.clientEmail = clientEmail;
         this.managerName = managerName;
         this.managerCpf = managerCpf;
@@ -88,12 +92,12 @@ public class AccountDetails {
         this.clientName = clientName;
     }
 
-    public String getClientcpf() {
-        return clientcpf;
+    public String getClientCpf() {
+        return clientCpf;
     }
 
-    public void setClientcpf(String clientcpf) {
-        this.clientcpf = clientcpf;
+    public void setClientCpf(String clientcpf) {
+        this.clientCpf = clientcpf;
     }
 
     public String getClientEmail() {

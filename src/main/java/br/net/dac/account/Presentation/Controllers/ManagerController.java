@@ -14,7 +14,7 @@ import br.net.dac.account.Application.Services.Manager.Queries.ClientsBalance.Cl
 import br.net.dac.account.Application.Services.Manager.Queries.ClientsBalance.ClientsBalanceResult;
 import br.net.dac.account.Application.Services.Manager.Queries.Handler.IManagerQueriesHandler;
 import br.net.dac.account.Application.Services.Manager.Queries.ManagerClients.ManagerClientsQuery;
-import br.net.dac.account.Application.Services.Manager.Queries.ManagerClients.ManagerClientsResult;
+import br.net.dac.account.Application.Services.Manager.Queries.ManagerClients.ManagerClient;
 import br.net.dac.account.Application.Services.Manager.Queries.PendingAccounts.PendingAccountsQuery;
 import br.net.dac.account.Application.Services.Manager.Queries.PendingAccounts.PendingAccount;
 import br.net.dac.account.Application.Services.Manager.Queries.TopFiveClients.TopFiveClientsQuery;
@@ -40,12 +40,12 @@ public class ManagerController {
     }
 
     @GetMapping("/{cpf}/clients")
-    public ResponseEntity<ManagerClientsResult> getClients(@PathVariable("cpf") String managerCpf) {
+    public ResponseEntity<List<ManagerClient>> getClients(@PathVariable("cpf") String managerCpf) {
         try {
             ManagerClientsQuery query = new ManagerClientsQuery(managerCpf);
-            ManagerClientsResult result = _managerQueriesHandler.getManagerClients(query);
+            List<ManagerClient> result = _managerQueriesHandler.getManagerClients(query);
             return ResponseEntity.status(200).body(result);
-        } catch (Exception ex) { //Mudar dps
+        } catch (Exception ex) {
             return ResponseEntity.status(500).build();
         }
     }

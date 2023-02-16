@@ -1,5 +1,7 @@
 package br.net.dac.account.Application.Services.Client.Queries.Handler;
 
+import java.util.List;
+
 import br.net.dac.account.Application.Services.Client.Queries.ClientDetails.ClientDetails;
 import br.net.dac.account.Application.Services.Client.Queries.ClientDetails.ClientDetailsQuery;
 import br.net.dac.account.Application.Services.Client.Queries.TransactionsHistory.TransactionHistoryResult;
@@ -10,4 +12,6 @@ public interface IClientQueriesHandler {
     TransactionHistoryResult getTransactionsHistory(TransactionsHistoryQuery query);
 
     ClientDetails getClientDetails(ClientDetailsQuery query);
+
+    List<ClientDetails> getAllClients();
 }
