@@ -1,22 +1,23 @@
 package br.net.dac.account.Application.Services.Transaction.Commands.Handler;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.net.dac.account.Application.Abstractions.IMessageSender;
 import br.net.dac.account.Application.Services.Transaction.Commands.Common.BaseTransactionCommand;
 import br.net.dac.account.Application.Services.Transaction.Commands.Deposit.DepositCommand;
 import br.net.dac.account.Application.Services.Transaction.Commands.Transfer.TransferCommand;
 import br.net.dac.account.Application.Services.Transaction.Commands.Withdraw.WithdrawCommand;
-import br.net.dac.account.Domain.Entities.Transaction;
+import br.net.dac.account.Domain.Entities.Write.Account;
+import br.net.dac.account.Domain.Entities.Write.Transaction;
+import br.net.dac.account.Domain.Events.SyncDataBase.SyncTransactionEvent;
 import br.net.dac.account.Domain.Exceptions.AccountNotFoundException;
 import br.net.dac.account.Domain.Exceptions.InsufficientFundsException;
-import br.net.dac.account.Infrastructure.Persistence.Repositories.AccountRepository;
-import br.net.dac.account.Infrastructure.Persistence.Repositories.TransactionRepository;
+import br.net.dac.account.Infrastructure.Persistence.RepositoriesWrite.AccountRepository;
+import br.net.dac.account.Infrastructure.Persistence.RepositoriesWrite.TransactionRepository;
 
 @Service
 public class TransactionCommandHandler implements ITransactionCommandHandler {
@@ -27,19 +28,24 @@ public class TransactionCommandHandler implements ITransactionCommandHandler {
     @Autowired
     AccountRepository _accountRepository;
 
+    @Autowired
+    IMessageSender _messageSender;
+
     @Override
     public void makeDeposit(DepositCommand deposit) throws AccountNotFoundException {
 
         ValidateAccountExist(deposit.getAccountId());
 
-        Double balance = _accountRepository.getBalanceByAccountId(deposit.getAccountId());
+        Account account = _accountRepository.findById(deposit.getAccountId()).get();
 
-        Transaction transaction = createTransaction(deposit, balance);
+        Transaction transaction = createTransaction(deposit, account.getBalance());
 
-        _transactionRepository.save(transaction);
+        transaction = _transactionRepository.saveAndFlush(transaction);
 
-        //Update balance
-        //Send event - balance and createTransaction
+        Double totalValue = account.getBalance() + deposit.getAmount();
+        updateBalanceAccount(account, totalValue);
+
+        _messageSender.sendSyncEventMessage(new SyncTransactionEvent(transaction, totalValue, account.getClient().getName()));
     }
 
     @Override
@@ -47,14 +53,18 @@ public class TransactionCommandHandler implements ITransactionCommandHandler {
         
         ValidateAccountExist(withdraw.getAccountId());
 
-        Double balance = _accountRepository.getBalanceByAccountId(withdraw.getAccountId());
+        Account account = _accountRepository.findById(withdraw.getAccountId()).get();
 
-        ValidateSufficientFunds(withdraw.getAmount(), balance);
+        ValidateSufficientFunds(withdraw.getAmount(), account.maxOperationValue());
 
-        Transaction transaction = createTransaction(withdraw, balance);
+        Transaction transaction = createTransaction(withdraw, account.getBalance());
 
-        _transactionRepository.save(transaction);
+        transaction = _transactionRepository.saveAndFlush(transaction);
+
+        Double totalValue = account.getBalance() - withdraw.getAmount();
+        updateBalanceAccount(account, totalValue);
         
+        _messageSender.sendSyncEventMessage(new SyncTransactionEvent(transaction, totalValue, account.getClient().getName()));
     }
 
     @Override
@@ -62,15 +72,27 @@ public class TransactionCommandHandler implements ITransactionCommandHandler {
 
         ValidateAccountExist(transfer.getAccountId());
         ValidateAccountExist(transfer.getDestinationAccountId());
-        
-        Double balance = _accountRepository.getBalanceByAccountId(transfer.getAccountId());
-        
-        ValidateSufficientFunds(transfer.getAmount(), balance);
 
-        Transaction transaction = createTransaction(transfer, balance);
-        transaction.setDestinationAccount(transaction.getDestinationAccount());
+        Account account = _accountRepository.findById(transfer.getAccountId()).get();
 
-        _transactionRepository.save(transaction);
+        ValidateSufficientFunds(transfer.getAmount(), account.maxOperationValue());
+
+        Transaction transaction = createTransaction(transfer, account.getBalance());
+        transaction.setDestinationAccount(transfer.getDestinationAccountId());
+
+        transaction = _transactionRepository.saveAndFlush(transaction);
+
+        Double totalValue = account.getBalance() - transfer.getAmount();
+        updateBalanceAccount(account, totalValue);
+
+        Account updatedDestinationAccount = updateBalanceDestinationAccount(transfer.getDestinationAccountId(), transfer.getAmount());
+
+        _messageSender.sendSyncEventMessage(new SyncTransactionEvent(transaction,
+                                                totalValue,
+                                                updatedDestinationAccount.getBalance(),
+                                                account.getClient().getName(),
+                                                updatedDestinationAccount.getClient().getName())
+                                            );
         
     }
 
@@ -78,7 +100,7 @@ public class TransactionCommandHandler implements ITransactionCommandHandler {
         return new Transaction(
             UUID.randomUUID(),
             command.getAmount(),
-            Date.from(LocalDate.now().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
+            new Date(),
             command.getOperation(),
             command.getAccountId(),
             null,
@@ -87,15 +109,28 @@ public class TransactionCommandHandler implements ITransactionCommandHandler {
     }
 
     private void ValidateAccountExist(Long accountId){
-        if(_accountRepository.existsById(accountId) == false){      
+        if(_accountRepository.existsApprovedAccountById(accountId) == false){      
             throw new AccountNotFoundException();
         };
     }
 
-    private void ValidateSufficientFunds(Double operationValue, Double balanceAccount){
-        if(operationValue > balanceAccount){      
+    private void ValidateSufficientFunds(Double operationValue, Double maxOperationValue){
+        if(operationValue > maxOperationValue){      
             throw new InsufficientFundsException();
         };
+    }
+
+    private void updateBalanceAccount(Account account, Double totalValue) {
+        account.setBalance(totalValue);
+        _accountRepository.saveAndFlush(account);
+    }
+
+    private Account updateBalanceDestinationAccount(Long accountId, Double amount)
+    {
+        Account destinationAccount =_accountRepository.findById(accountId).get();   
+        destinationAccount.setBalance(destinationAccount.getBalance() + amount);
+        _accountRepository.saveAndFlush(destinationAccount);
+        return destinationAccount;
     }
     
 }

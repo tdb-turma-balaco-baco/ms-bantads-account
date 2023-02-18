@@ -1,5 +1,7 @@
 package br.net.dac.account.Presentation.Controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,6 +16,7 @@ import br.net.dac.account.Application.Services.Client.Queries.ClientDetails.Clie
 import br.net.dac.account.Application.Services.Client.Queries.Handler.IClientQueriesHandler;
 import br.net.dac.account.Application.Services.Client.Queries.TransactionsHistory.TransactionHistoryResult;
 import br.net.dac.account.Application.Services.Client.Queries.TransactionsHistory.TransactionsHistoryQuery;
+import br.net.dac.account.Application.Services.Manager.Commands.Handler.IManagerCommandHandler;
 import br.net.dac.account.Presentation.Contracts.Client.TransactionHistoryRequest;
 
 @CrossOrigin
@@ -24,16 +27,19 @@ public class ClientController {
     @Autowired
     IClientQueriesHandler _clientQueriesHandler;
 
-    @GetMapping("{cpf}/transactionsHistory")
-    public ResponseEntity<TransactionHistoryResult> transactionsHistory(@PathVariable("cpf") String cpf,
+    @Autowired
+    IManagerCommandHandler _manager;
+
+    @GetMapping("{accountNumber}/transactionsHistory")
+    public ResponseEntity<List<TransactionHistoryResult>> transactionsHistory(@PathVariable("accountNumber") Long accountNumber,
             @RequestBody TransactionHistoryRequest request) {
         try {
             TransactionsHistoryQuery query = new TransactionsHistoryQuery(
-                    cpf,
-                    request.getStarDate(),
+                    accountNumber,
+                    request.getStartDate(),
                     request.getEndDate());
 
-            TransactionHistoryResult transactionHistory = _clientQueriesHandler.getTransactionsHistory(query);
+            List<TransactionHistoryResult> transactionHistory = _clientQueriesHandler.getTransactionsHistory(query);
 
             return ResponseEntity.status(200).body(transactionHistory);
         } catch (Exception ex) {
@@ -53,7 +59,17 @@ public class ClientController {
         } catch(Exception ex){
             return ResponseEntity.status(500).build();
         }
-        
     }
+    
+    @GetMapping("/list")
+    public ResponseEntity<List<ClientDetails>> getAllCLients() {
+        try{
+            List<ClientDetails> clientDetails = _clientQueriesHandler.getAllClients();
 
+            return ResponseEntity.status(200).body(clientDetails);
+
+        } catch(Exception ex){
+            return ResponseEntity.status(500).build();
+        }
+    }
 }

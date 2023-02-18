@@ -1,5 +1,7 @@
 package br.net.dac.account.Presentation.Controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,11 +14,11 @@ import br.net.dac.account.Application.Services.Manager.Queries.ClientsBalance.Cl
 import br.net.dac.account.Application.Services.Manager.Queries.ClientsBalance.ClientsBalanceResult;
 import br.net.dac.account.Application.Services.Manager.Queries.Handler.IManagerQueriesHandler;
 import br.net.dac.account.Application.Services.Manager.Queries.ManagerClients.ManagerClientsQuery;
-import br.net.dac.account.Application.Services.Manager.Queries.ManagerClients.ManagerClientsResult;
+import br.net.dac.account.Application.Services.Manager.Queries.ManagerClients.ManagerClient;
 import br.net.dac.account.Application.Services.Manager.Queries.PendingAccounts.PendingAccountsQuery;
-import br.net.dac.account.Application.Services.Manager.Queries.PendingAccounts.PendingAccountsResult;
+import br.net.dac.account.Application.Services.Manager.Queries.PendingAccounts.PendingAccount;
 import br.net.dac.account.Application.Services.Manager.Queries.TopFiveClients.TopFiveClientsQuery;
-import br.net.dac.account.Application.Services.Manager.Queries.TopFiveClients.TopFiveClientsResult;
+import br.net.dac.account.Application.Services.Manager.Queries.TopFiveClients.TopClient;
 
 @CrossOrigin
 @RestController
@@ -27,34 +29,34 @@ public class ManagerController {
     IManagerQueriesHandler _managerQueriesHandler;
 
     @GetMapping("/{cpf}/pendingAccounts")
-    public ResponseEntity<PendingAccountsResult> pendingAccounts(@PathVariable("cpf") String managerCpf) {
+    public ResponseEntity<List<PendingAccount>> pendingAccounts(@PathVariable("cpf") String managerCpf) {
         try {
             PendingAccountsQuery query = new PendingAccountsQuery(managerCpf);
-            PendingAccountsResult result = _managerQueriesHandler.getPendingAccounts(query);
+            List<PendingAccount> result = _managerQueriesHandler.getPendingAccounts(query);
             return ResponseEntity.status(200).body(result);
-        } catch (Exception ex) { //Mudar dps
+        } catch (Exception ex) {
             return ResponseEntity.status(500).build();
         }
     }
 
     @GetMapping("/{cpf}/clients")
-    public ResponseEntity<ManagerClientsResult> getClients(@PathVariable("cpf") String managerCpf) {
+    public ResponseEntity<List<ManagerClient>> getClients(@PathVariable("cpf") String managerCpf) {
         try {
             ManagerClientsQuery query = new ManagerClientsQuery(managerCpf);
-            ManagerClientsResult result = _managerQueriesHandler.getManagerClients(query);
+            List<ManagerClient> result = _managerQueriesHandler.getManagerClients(query);
             return ResponseEntity.status(200).body(result);
-        } catch (Exception ex) { //Mudar dps
+        } catch (Exception ex) {
             return ResponseEntity.status(500).build();
         }
     }
 
     @GetMapping("/{cpf}/topFiveClients")
-    public ResponseEntity<TopFiveClientsResult> getTopFiveClients(@PathVariable("cpf") String managerCpf) {
+    public ResponseEntity<List<TopClient>> getTopFiveClients(@PathVariable("cpf") String managerCpf) {
         try {
             TopFiveClientsQuery query = new TopFiveClientsQuery(managerCpf);
-            TopFiveClientsResult result = _managerQueriesHandler.getTopFiveClients(query);
+            List<TopClient> result = _managerQueriesHandler.getTopFiveClients(query);
             return ResponseEntity.status(200).body(result);
-        } catch (Exception ex) { //Mudar dps
+        } catch (Exception ex) { 
             return ResponseEntity.status(500).build();
         }
     }
@@ -65,7 +67,7 @@ public class ManagerController {
             ClientsBalanceQuery query = new ClientsBalanceQuery(managerCpf);
             ClientsBalanceResult result = _managerQueriesHandler.getClientsBalance(query);
             return ResponseEntity.status(200).body(result);
-        } catch (Exception ex) { //Mudar dps
+        } catch (Exception ex) {
             return ResponseEntity.status(500).build();
         }
     }

@@ -4,20 +4,14 @@ import java.util.Date;
 
 public class TransactionsHistoryQuery {
     
-    private String cpf;
+    private Long accountId;
     private Date startDate;
     private Date endDate;
-
-    public TransactionsHistoryQuery(String cpf, Date startDate, Date endDate) {
-        this.cpf = cpf;
+    
+    public TransactionsHistoryQuery(Long accountId, Date startDate, Date endDate) {
+        this.accountId = accountId;
         this.startDate = startDate;
         this.endDate = endDate;
-    }
-    public String getCpf() {
-        return cpf;
-    }
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
     }
     public Date getStartDate() {
         return startDate;
@@ -30,6 +24,12 @@ public class TransactionsHistoryQuery {
     }
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+    public Long getAccountId() {
+        return accountId;
+    }
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
     }
 
 

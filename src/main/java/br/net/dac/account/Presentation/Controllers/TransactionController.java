@@ -13,6 +13,8 @@ import br.net.dac.account.Application.Services.Transaction.Commands.Handler.ITra
 import br.net.dac.account.Application.Services.Transaction.Commands.Transfer.TransferCommand;
 import br.net.dac.account.Application.Services.Transaction.Commands.Withdraw.WithdrawCommand;
 import br.net.dac.account.Domain.Enums.Operation;
+import br.net.dac.account.Domain.Exceptions.AccountNotFoundException;
+import br.net.dac.account.Domain.Exceptions.InsufficientFundsException;
 import br.net.dac.account.Presentation.Contracts.Transaction.DepositRequest;
 import br.net.dac.account.Presentation.Contracts.Transaction.TransferRequest;
 import br.net.dac.account.Presentation.Contracts.Transaction.WithdrawRequest;
@@ -28,40 +30,61 @@ public class TransactionController {
     @PostMapping("/deposit")
     public ResponseEntity<?> deposit(@RequestBody DepositRequest depositRequest) {
 
-        DepositCommand depositCommand = new DepositCommand(
-                depositRequest.getAmount(),
-                depositRequest.getAccountId(),
-                Operation.DEPOSIT);
+        try
+        {
+            DepositCommand depositCommand = new DepositCommand(
+                    depositRequest.getAmount(),
+                    depositRequest.getAccountId(),
+                    Operation.DEPOSIT);
 
-        _transactionCommandHandler.makeDeposit(depositCommand);
+            _transactionCommandHandler.makeDeposit(depositCommand);
 
-        return ResponseEntity.status(200).build();
+            return ResponseEntity.status(200).build();
+        }catch(AccountNotFoundException ex){
+            return ResponseEntity.status(400).body("Conta não existe!");
+        }
     }
 
     @PostMapping("/withdraw")
     public ResponseEntity<?> withdraw(@RequestBody WithdrawRequest withdrawRequest) {
 
-        WithdrawCommand withdrawCommand = new WithdrawCommand(
-                withdrawRequest.getAmount(),
-                withdrawRequest.getAccountId(),
-                Operation.WITHDRAW);
+        try
+        {
+            WithdrawCommand withdrawCommand = new WithdrawCommand(
+                    withdrawRequest.getAmount(),
+                    withdrawRequest.getAccountId(),
+                    Operation.WITHDRAW);
 
-        _transactionCommandHandler.makeWithdraw(withdrawCommand);
+            _transactionCommandHandler.makeWithdraw(withdrawCommand);
 
-        return ResponseEntity.status(200).build();
+            return ResponseEntity.status(200).build();
+        }catch(AccountNotFoundException ex){
+            return ResponseEntity.status(400).body("Conta não existe!");
+        }catch(InsufficientFundsException ex){
+            return ResponseEntity.status(400).body("Salvo insuficiente!");
+        }
     }
 
     @PostMapping("/transfer")
     public ResponseEntity<?> transfer(@RequestBody TransferRequest transferRequest) {
        
-        TransferCommand transferCommand = new TransferCommand(
-                transferRequest.getAmount(),
-                transferRequest.getAccountId(),
-                Operation.TRANFER,
-                transferRequest.getDestinationAccountId());
+        try
+        {
+            TransferCommand transferCommand = new TransferCommand(
+                    transferRequest.getAmount(),
+                    transferRequest.getAccountId(),
+                    Operation.TRANFER,
+                    transferRequest.getDestinationAccountId());
 
-        _transactionCommandHandler.makeTransfer(transferCommand);
+            _transactionCommandHandler.makeTransfer(transferCommand);
 
-        return ResponseEntity.status(200).build();
+            return ResponseEntity.status(200).build();
+
+        }catch(AccountNotFoundException ex){
+            return ResponseEntity.status(400).body("Conta não existe!");
+        }catch(InsufficientFundsException ex){
+            return ResponseEntity.status(400).body("Salvo insuficiente!");
+        }
+
     }
 }

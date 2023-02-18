@@ -1,5 +1,5 @@
 package br.net.dac.account.Domain.Events.Common;
 
-public interface DomainEvent {
+public abstract class DomainEvent {
     
 }
