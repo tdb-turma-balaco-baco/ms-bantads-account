@@ -9,6 +9,9 @@ import br.net.dac.account.Application.Services.Client.Events.UpdateAccountEvent;
 import br.net.dac.account.Application.Services.Client.Events.UpdateStatusAccountEvent;
 import br.net.dac.account.Application.Services.Manager.Commands.Events.SwapManagerEvent;
 import br.net.dac.account.Application.Services.Manager.Commands.Events.UpdateManagerEvent;
+import br.net.dac.account.Domain.Events.ChangedStatusAccountEvent;
+import br.net.dac.account.Domain.Events.CreatedAccountEvent;
+import br.net.dac.account.Domain.Events.ErrorAccountEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,9 +32,17 @@ public class RabbitConfig {
     @Value("${database-sync.queue}")
     private String databaseSyncQueue;
 
+    @Value("${account-response.queue}")
+    private String accountResponseQueue;
+
     @Bean
     public Queue accountQueue() {
         return new Queue(accountQueue, true);
+    }
+
+    @Bean
+    public Queue accountResponseQueue() {
+        return new Queue(accountResponseQueue, true);
     }
 
     @Bean
@@ -61,6 +72,10 @@ public class RabbitConfig {
         idClassMapping.put("UpdateStatusAccountEvent", UpdateStatusAccountEvent.class);
         idClassMapping.put("UpdateManagerEvent", UpdateManagerEvent.class);
         idClassMapping.put("SwapManagerEvent", SwapManagerEvent.class);
+
+        idClassMapping.put("ChangedStatusAccountEvent", ChangedStatusAccountEvent.class);
+        idClassMapping.put("CreatedAccountEvent", CreatedAccountEvent.class);
+        idClassMapping.put("ErrorAccountEvent", ErrorAccountEvent.class);
         
         return idClassMapping;
     }

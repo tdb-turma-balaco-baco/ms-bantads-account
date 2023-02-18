@@ -24,7 +24,7 @@ public class MessageSender implements IMessageSender {
 
     @Override
     public void sendEventMessage(DomainEvent event) {
-        sendMessage("account.queue", event);
+        sendMessage("account-response.queue", event);
         
     }
     
