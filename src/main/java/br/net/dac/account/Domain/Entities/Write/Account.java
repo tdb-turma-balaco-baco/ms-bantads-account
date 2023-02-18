@@ -28,7 +28,7 @@ public class Account {
     @JoinColumn(name = "clientId")
     private Client client;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "managerId")
     private Manager manager;
 

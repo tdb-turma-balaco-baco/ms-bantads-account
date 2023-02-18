@@ -52,6 +52,7 @@ public class ClientCommandHandler implements IClientCommandHandler{
             Manager manager = _managerRepository.findByCpf(command.getManagerCpf());
             if(manager == null){
                 manager = new Manager(command.getManagerName(), command.getManagerCpf());
+                _managerRepository.saveAndFlush(manager);
             }
 
             Account account = new Account();

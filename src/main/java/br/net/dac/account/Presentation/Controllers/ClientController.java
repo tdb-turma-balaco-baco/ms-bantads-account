@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.net.dac.account.Application.Services.Client.Commands.CreateAccount.CreateAccountCommand;
+import br.net.dac.account.Application.Services.Client.Commands.Handler.IClientCommandHandler;
 import br.net.dac.account.Application.Services.Client.Queries.ClientDetails.ClientDetails;
 import br.net.dac.account.Application.Services.Client.Queries.ClientDetails.ClientDetailsQuery;
 import br.net.dac.account.Application.Services.Client.Queries.Handler.IClientQueriesHandler;
@@ -26,6 +28,9 @@ public class ClientController {
 
     @Autowired
     IClientQueriesHandler _clientQueriesHandler;
+    
+    @Autowired
+    IClientCommandHandler _client;
 
     @Autowired
     IManagerCommandHandler _manager;
@@ -67,6 +72,17 @@ public class ClientController {
             List<ClientDetails> clientDetails = _clientQueriesHandler.getAllClients();
 
             return ResponseEntity.status(200).body(clientDetails);
+
+        } catch(Exception ex){
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    @GetMapping("/save")
+    public ResponseEntity<?> teste(@RequestBody CreateAccountCommand command) {
+        try{
+            _client.createAccountClient(command);
+            return ResponseEntity.status(200).body("ok");
 
         } catch(Exception ex){
             return ResponseEntity.status(500).build();

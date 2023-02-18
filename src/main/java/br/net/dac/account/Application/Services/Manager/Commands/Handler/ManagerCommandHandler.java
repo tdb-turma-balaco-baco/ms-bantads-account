@@ -44,8 +44,6 @@ public class ManagerCommandHandler implements IManagerCommandHandler {
         manager = _managerRepository.saveAndFlush(manager);
         
         _messageSender.sendSyncEventMessage(new SyncUpdateManagerEvent(manager));
-        //Event Só se der erro 
-        
     }
 
     @Override
@@ -81,6 +79,7 @@ public class ManagerCommandHandler implements IManagerCommandHandler {
         Manager manager = _managerRepository.findByCpf(command.getCpf());
         if(manager == null){
             manager = new Manager(command.getName(), command.getCpf());
+            _managerRepository.saveAndFlush(manager);
         } 
 
         account.setManager(manager);
@@ -89,7 +88,6 @@ public class ManagerCommandHandler implements IManagerCommandHandler {
 
         _messageSender.sendSyncEventMessage(new SyncSwapOneAccountEvent(account));
         
-        //Certo ok
 
         //Erro event
     }
