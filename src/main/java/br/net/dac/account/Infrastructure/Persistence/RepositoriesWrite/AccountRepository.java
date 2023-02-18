@@ -24,5 +24,7 @@ public interface AccountRepository extends JpaRepository<Account,Long>{
     @Query("select a from Account a inner join a.manager m where m.cpf = :cpf AND a.status != 'PENDING'")
     List<Account> findAccountByManagerCpf(@PathParam("cpf") String cpf);
 
+    @Query("select case when count(acc) > 0 then true else false end FROM Account acc where acc.accountNumber = :id AND acc.status = 'APPROVED'")
+    boolean existsApprovedAccountById(@PathParam("id") Long id);
 
 }

@@ -32,8 +32,14 @@ public class TransactionDetails {
     @Column(name = "sourceAccount")
     private Long sourceAccount;
 
+    @Column(name = "sourceClientName")
+    private String sourceClientName;
+
     @Column(name = "destinationAccount", nullable = true)
     private Long destinationAccount;
+
+    @Column(name = "destinationClientName", nullable = true)
+    private String destinationClientName;
 
     @Column(name = "previousBalance")
     private Double previousBalance;
@@ -108,5 +114,31 @@ public class TransactionDetails {
         this.previousBalance = previousBalance;
     }
 
+    public Double balaceAfterTransaction(){
+        if(operationType == Operation.DEPOSIT)
+        {
+            return this.previousBalance + this.value;
+        }
+        else
+        {
+            return this.previousBalance - this.value;
+        }
+    }
+
+    public String getSourceClientName() {
+        return sourceClientName;
+    }
+
+    public void setSourceClientName(String sourceClientName) {
+        this.sourceClientName = sourceClientName;
+    }
+
+    public String getDestinationClientName() {
+        return destinationClientName;
+    }
+
+    public void setDestinationClientName(String destinationClientName) {
+        this.destinationClientName = destinationClientName;
+    }
     
 }

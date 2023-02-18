@@ -5,11 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.net.dac.account.Application.Abstractions.IMessageSender;
 import br.net.dac.account.Application.Services.Manager.Commands.SwapManagerAccount.SwapAllAccountManagerCommand;
 import br.net.dac.account.Application.Services.Manager.Commands.SwapManagerAccount.SwapOneAccountManagerCommand;
 import br.net.dac.account.Application.Services.Manager.Commands.UpdateManager.UpdateManagerCommand;
 import br.net.dac.account.Domain.Entities.Write.Account;
 import br.net.dac.account.Domain.Entities.Write.Manager;
+import br.net.dac.account.Domain.Events.SyncDataBase.SyncSwapAllAcountEvent;
+import br.net.dac.account.Domain.Events.SyncDataBase.SyncSwapOneAccountEvent;
+import br.net.dac.account.Domain.Events.SyncDataBase.SyncUpdateManagerEvent;
 import br.net.dac.account.Domain.Exceptions.AccountNotFoundException;
 import br.net.dac.account.Domain.Exceptions.ManagerNotFoundException;
 import br.net.dac.account.Infrastructure.Persistence.RepositoriesWrite.AccountRepository;
@@ -28,14 +32,18 @@ public class ManagerCommandHandler implements IManagerCommandHandler {
     @Autowired
     ClientRepository _clientRepository;
 
+    @Autowired
+    IMessageSender _messageSender;
+
     @Override
     public void updateManager(UpdateManagerCommand command) {
         Manager manager = _managerRepository.findByCpf(command.getCpf());
         if(manager == null) throw new ManagerNotFoundException();
 
         manager.setName(command.getName());
-        _managerRepository.saveAndFlush(manager);
+        manager = _managerRepository.saveAndFlush(manager);
         
+        _messageSender.sendSyncEventMessage(new SyncUpdateManagerEvent(manager));
         //Event Só se der erro 
         
     }
@@ -58,6 +66,8 @@ public class ManagerCommandHandler implements IManagerCommandHandler {
 
         _accountRepository.saveAllAndFlush(accounts);
 
+        _messageSender.sendSyncEventMessage(new SyncSwapAllAcountEvent(manager,command.getOldManagerCpf()));
+
         //Certo event
 
         //Erro event
@@ -75,7 +85,9 @@ public class ManagerCommandHandler implements IManagerCommandHandler {
 
         account.setManager(manager);
 
-        _accountRepository.saveAndFlush(account);
+        account = _accountRepository.saveAndFlush(account);
+
+        _messageSender.sendSyncEventMessage(new SyncSwapOneAccountEvent(account));
         
         //Certo ok
 

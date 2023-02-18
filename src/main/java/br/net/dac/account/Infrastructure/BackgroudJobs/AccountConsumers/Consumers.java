@@ -16,7 +16,6 @@ import br.net.dac.account.Application.Services.Client.Events.UpdateStatusAccount
 import br.net.dac.account.Application.Services.Manager.Commands.Events.SwapManagerEvent;
 import br.net.dac.account.Application.Services.Manager.Commands.Events.UpdateManagerEvent;
 import br.net.dac.account.Application.Services.Manager.Commands.Handler.IManagerCommandHandler;
-import br.net.dac.account.Application.Services.Manager.Commands.SwapManagerAccount.BaseSwapAccountManager;
 import br.net.dac.account.Application.Services.Manager.Commands.SwapManagerAccount.SwapAllAccountManagerCommand;
 import br.net.dac.account.Application.Services.Manager.Commands.SwapManagerAccount.SwapOneAccountManagerCommand;
 import br.net.dac.account.Application.Services.Manager.Commands.UpdateManager.UpdateManagerCommand;
@@ -76,18 +75,18 @@ public class Consumers {
     @RabbitHandler
     public void receiveSwapManagerAccount(@Payload SwapManagerEvent event){
 
-        BaseSwapAccountManager baseSwap = new BaseSwapAccountManager(event.getOldManagerCpf(),
-                                            event.getCpf(),
-                                            event.getName());
-
         if(event.isSwapAll())
         {
-            var command = (SwapAllAccountManagerCommand)baseSwap;
+            var command =  new SwapAllAccountManagerCommand(event.getOldManagerCpf(),
+                            event.getCpf(),
+                            event.getName());
              _managerHandler.swapAllAccountManager(command);
         }
         else
         {
-            var command = (SwapOneAccountManagerCommand)baseSwap;
+            var command = new SwapOneAccountManagerCommand(event.getOldManagerCpf(),
+                            event.getCpf(),
+                            event.getName());
             _managerHandler.swapOneAccountManager(command);
         }
 

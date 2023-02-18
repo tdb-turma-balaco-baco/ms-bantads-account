@@ -149,6 +149,10 @@ public class Account {
         this.limit = this.wage >= 2000.0 ? (this.wage / 2) : 0.0;
     }
 
+    public Double maxOperationValue(){
+        return this.balance + this.limit;
+    }
+
     public Date getCreationDate() {
         return creationDate;
     }

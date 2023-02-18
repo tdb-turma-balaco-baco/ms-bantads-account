@@ -67,7 +67,7 @@ public class ManagerController {
             ClientsBalanceQuery query = new ClientsBalanceQuery(managerCpf);
             ClientsBalanceResult result = _managerQueriesHandler.getClientsBalance(query);
             return ResponseEntity.status(200).body(result);
-        } catch (Exception ex) { //Mudar dps
+        } catch (Exception ex) {
             return ResponseEntity.status(500).build();
         }
     }

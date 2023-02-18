@@ -9,7 +9,7 @@ import br.net.dac.account.Application.Services.Client.Queries.TransactionsHistor
 
 public interface IClientQueriesHandler {
     
-    TransactionHistoryResult getTransactionsHistory(TransactionsHistoryQuery query);
+    List<TransactionHistoryResult> getTransactionsHistory(TransactionsHistoryQuery query);
 
     ClientDetails getClientDetails(ClientDetailsQuery query);
 

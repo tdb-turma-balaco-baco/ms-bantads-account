@@ -50,6 +50,7 @@ public class RabbitConfig {
     public DefaultClassMapper classMapper() {
         DefaultClassMapper classMapper = new DefaultClassMapper();
         classMapper.setIdClassMapping(customClassMapping());
+        classMapper.setTrustedPackages("*");
         return classMapper;
     }
 
