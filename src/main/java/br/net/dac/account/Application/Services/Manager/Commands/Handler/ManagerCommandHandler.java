@@ -11,6 +11,7 @@ import br.net.dac.account.Application.Services.Manager.Commands.SwapManagerAccou
 import br.net.dac.account.Application.Services.Manager.Commands.UpdateManager.UpdateManagerCommand;
 import br.net.dac.account.Domain.Entities.Write.Account;
 import br.net.dac.account.Domain.Entities.Write.Manager;
+import br.net.dac.account.Domain.Events.ReplacedAllManagerEvent;
 import br.net.dac.account.Domain.Events.SyncDataBase.SyncSwapAllAcountEvent;
 import br.net.dac.account.Domain.Events.SyncDataBase.SyncSwapOneAccountEvent;
 import br.net.dac.account.Domain.Events.SyncDataBase.SyncUpdateManagerEvent;
@@ -66,9 +67,8 @@ public class ManagerCommandHandler implements IManagerCommandHandler {
 
         _messageSender.sendSyncEventMessage(new SyncSwapAllAcountEvent(manager,command.getOldManagerCpf()));
 
-        //Certo event
-
-        //Erro event
+        ReplacedAllManagerEvent event = new ReplacedAllManagerEvent(command.getCpf());
+        _messageSender.sendEventMessage(event);
     }
 
     @Override
@@ -88,8 +88,6 @@ public class ManagerCommandHandler implements IManagerCommandHandler {
 
         _messageSender.sendSyncEventMessage(new SyncSwapOneAccountEvent(account));
         
-
-        //Erro event
     }
     
 }

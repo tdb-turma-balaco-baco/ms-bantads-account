@@ -111,6 +111,7 @@ public class ClientCommandHandler implements IClientCommandHandler{
         _messageSender.sendSyncEventMessage(new SyncStatusAccountEvent(account));
 
         ChangedStatusAccountEvent event = new ChangedStatusAccountEvent(account.getClient().getCpf(),
+                                            account.getClient().getEmail(),
                                             command.getStatus(),
                                             command.getStatusReason());
 
