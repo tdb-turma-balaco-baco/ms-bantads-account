@@ -22,7 +22,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @EnableJpaRepositories(
-    basePackages = "br.net.dac.account.infrastructure.persistence.repositoriesWrite",
+    basePackages = "br.net.dac.account.infrastructure.persistence.RepositoriesWrite",
     entityManagerFactoryRef = "accountWriteEntityManager",
     transactionManagerRef = "accountWriteTransactionManager")
 public class AccountWriteDataBase {
