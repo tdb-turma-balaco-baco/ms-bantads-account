@@ -12,6 +12,7 @@ import br.net.dac.account.Application.Services.Manager.Commands.Events.UpdateMan
 import br.net.dac.account.Domain.Events.ChangedStatusAccountEvent;
 import br.net.dac.account.Domain.Events.CreatedAccountEvent;
 import br.net.dac.account.Domain.Events.ErrorAccountEvent;
+import br.net.dac.account.Domain.Events.ReplacedAllManagerEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,6 +77,7 @@ public class RabbitConfig {
         idClassMapping.put("ChangedStatusAccountEvent", ChangedStatusAccountEvent.class);
         idClassMapping.put("CreatedAccountEvent", CreatedAccountEvent.class);
         idClassMapping.put("ErrorAccountEvent", ErrorAccountEvent.class);
+        idClassMapping.put("ReplacedAllManagerEvent", ReplacedAllManagerEvent.class);
         
         return idClassMapping;
     }

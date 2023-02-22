@@ -23,7 +23,7 @@ import org.springframework.transaction.PlatformTransactionManager;
     basePackages = "br.net.dac.account.Infrastructure.Persistence.RepositoriesRead",
     entityManagerFactoryRef = "accountReadEntityManager",
     transactionManagerRef = "accountReadTransactionManager")
-public class AccountReadDataBase {
+public class AccountReadDatabase {
 
     @Autowired
     private Environment env;
